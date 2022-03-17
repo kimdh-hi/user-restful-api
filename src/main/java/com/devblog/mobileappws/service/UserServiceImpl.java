@@ -18,9 +18,17 @@ public class UserServiceImpl implements UserService{
     @Transactional
     @Override
     public UserRequestDto createUser(UserRequestDto userRequestDto) {
+        findByEmail(userRequestDto.getEmail());
         User user = UserDtoAssembler.toUserEntity(userRequestDto);
         User savedUser = userRepository.save(user);
 
         return UserDtoAssembler.toUserRequestDto(savedUser);
+    }
+
+
+    private User findByEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow(
+                () -> {throw new IllegalArgumentException(email + " is not exist.");}
+        );
     }
 }
