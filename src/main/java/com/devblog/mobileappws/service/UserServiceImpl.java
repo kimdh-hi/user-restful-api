@@ -5,6 +5,7 @@ import com.devblog.mobileappws.repository.UserRepository;
 import com.devblog.mobileappws.service.dto.UserDtoAssembler;
 import com.devblog.mobileappws.service.dto.request.UserRequestDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,21 +15,24 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserServiceImpl implements UserService{
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     @Override
     public UserRequestDto createUser(UserRequestDto userRequestDto) {
-        findByEmail(userRequestDto.getEmail());
+        checkDuplicateEmail(userRequestDto.getEmail());
+
         User user = UserDtoAssembler.toUserEntity(userRequestDto);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
         User savedUser = userRepository.save(user);
 
         return UserDtoAssembler.toUserRequestDto(savedUser);
     }
 
-
-    private User findByEmail(String email) {
-        return userRepository.findByEmail(email).orElseThrow(
-                () -> {throw new IllegalArgumentException(email + " is not exist.");}
-        );
+    private void checkDuplicateEmail(String email) {
+        if (userRepository.findByEmail(email).isPresent()) {
+            throw new IllegalArgumentException("이미 존재하는 Email 입니다. Email: " + email);
+        }
     }
 }
