@@ -1,10 +1,12 @@
 package com.devblog.mobileappws.controller;
 
 import com.devblog.mobileappws.controller.dto.UserAssembler;
+import com.devblog.mobileappws.controller.dto.request.LoginRequest;
 import com.devblog.mobileappws.controller.dto.request.UserRequest;
 import com.devblog.mobileappws.controller.dto.response.UserResponse;
 import com.devblog.mobileappws.service.UserService;
 import com.devblog.mobileappws.service.dto.request.UserRequestDto;
+import com.devblog.mobileappws.service.dto.response.JwtTokenResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -43,5 +45,10 @@ public class UserController {
     public String deleteUser() {
 
         return null;
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<JwtTokenResponse> login(@RequestBody LoginRequest loginRequest) {
+        return ResponseEntity.ok(userService.login(loginRequest));
     }
 }

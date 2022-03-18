@@ -1,10 +1,18 @@
 package com.devblog.mobileappws.service;
 
+import com.devblog.mobileappws.controller.dto.request.LoginRequest;
 import com.devblog.mobileappws.entity.User;
 import com.devblog.mobileappws.repository.UserRepository;
+import com.devblog.mobileappws.security.CustomUserDetailsService;
+import com.devblog.mobileappws.security.JwtTokenProvider;
 import com.devblog.mobileappws.service.dto.UserDtoAssembler;
 import com.devblog.mobileappws.service.dto.request.UserRequestDto;
+import com.devblog.mobileappws.service.dto.response.JwtTokenResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +24,8 @@ public class UserServiceImpl implements UserService{
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Transactional
     @Override
@@ -28,6 +38,20 @@ public class UserServiceImpl implements UserService{
         User savedUser = userRepository.save(user);
 
         return UserDtoAssembler.toUserRequestDto(savedUser);
+    }
+
+    @Override
+    public JwtTokenResponse login(LoginRequest loginRequest) {
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword())
+            );
+        } catch (BadCredentialsException ex) {
+            throw new RuntimeException("로그인 정보가 올바르지 않습니다.");
+        }
+
+        String token = jwtTokenProvider.generateToken(loginRequest.getEmail());
+        return new JwtTokenResponse(token);
     }
 
     private void checkDuplicateEmail(String email) {
