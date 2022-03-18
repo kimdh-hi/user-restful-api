@@ -2,17 +2,18 @@ package com.devblog.mobileappws.service;
 
 import com.devblog.mobileappws.controller.dto.request.LoginRequest;
 import com.devblog.mobileappws.entity.User;
+import com.devblog.mobileappws.exception.exceptions.ResourceAlreadyExistsException;
+import com.devblog.mobileappws.exception.exceptions.ResourceNotFoundException;
 import com.devblog.mobileappws.repository.UserRepository;
-import com.devblog.mobileappws.security.CustomUserDetailsService;
-import com.devblog.mobileappws.security.JwtTokenProvider;
+import com.devblog.mobileappws.security.jwt.JwtTokenProvider;
 import com.devblog.mobileappws.service.dto.UserDtoAssembler;
 import com.devblog.mobileappws.service.dto.request.UserRequestDto;
 import com.devblog.mobileappws.service.dto.response.JwtTokenResponse;
+import com.devblog.mobileappws.service.dto.response.UserResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,9 +55,20 @@ public class UserServiceImpl implements UserService{
         return new JwtTokenResponse(token);
     }
 
+    @Override
+    public UserResponseDto getUser(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> {
+                    throw new ResourceNotFoundException("존재하지 않는 사용자입니다. userId: " + userId);
+                }
+        );
+
+        return UserDtoAssembler.toUserResponseDto(user);
+    }
+
     private void checkDuplicateEmail(String email) {
         if (userRepository.findByEmail(email).isPresent()) {
-            throw new IllegalArgumentException("이미 존재하는 Email 입니다. Email: " + email);
+            throw new ResourceAlreadyExistsException("이미 존재하는 Email 입니다. Email: " + email);
         }
     }
 }

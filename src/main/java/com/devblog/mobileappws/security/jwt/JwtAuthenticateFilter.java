@@ -1,5 +1,7 @@
-package com.devblog.mobileappws.security;
+package com.devblog.mobileappws.security.jwt;
 
+import com.devblog.mobileappws.security.CustomUserDetailsService;
+import com.devblog.mobileappws.security.SecurityConstants;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import lombok.RequiredArgsConstructor;

@@ -7,9 +7,12 @@ import com.devblog.mobileappws.controller.dto.response.UserResponse;
 import com.devblog.mobileappws.service.UserService;
 import com.devblog.mobileappws.service.dto.request.UserRequestDto;
 import com.devblog.mobileappws.service.dto.response.JwtTokenResponse;
+import com.devblog.mobileappws.service.dto.response.UserResponseDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RequestMapping("/users")
 @RestController
@@ -21,14 +24,15 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping
-    public String getUser() {
+    @GetMapping("/{userId}")
+    public ResponseEntity getUser(@PathVariable Long userId) {
+        UserResponseDto userResponseDto = userService.getUser(userId);
 
-        return null;
+        return ResponseEntity.ok(UserAssembler.toUserResponse(userResponseDto));
     }
 
     @PostMapping
-    public ResponseEntity<UserResponse> createUser(@RequestBody UserRequest userRequest) {
+    public ResponseEntity<UserResponse> createUser(@Valid  @RequestBody UserRequest userRequest) {
         UserRequestDto userRequestDto = UserAssembler.toUserRequestDto(userRequest);
         UserResponse userResponse = UserAssembler.toUserResponse(userService.createUser(userRequestDto));
 

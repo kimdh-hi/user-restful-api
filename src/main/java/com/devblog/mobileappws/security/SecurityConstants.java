@@ -1,5 +1,6 @@
 package com.devblog.mobileappws.security;
 
+
 public class SecurityConstants {
 
     public static final long EXPIRATION_TIME = 1000 * 60 * 60 * 24;
@@ -7,5 +8,5 @@ public class SecurityConstants {
     public static final String AUTH_HEADER = "Authorization";
     public static final String SIGN_UP_URL = "/users";
     public static final String LOGIN_URL = "/users/login";
-    public static final String TOKEN_SECURITY = "secret";
+
 }

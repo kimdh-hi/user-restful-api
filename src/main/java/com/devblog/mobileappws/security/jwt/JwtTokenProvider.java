@@ -1,5 +1,6 @@
-package com.devblog.mobileappws.security;
+package com.devblog.mobileappws.security.jwt;
 
+import com.devblog.mobileappws.security.SecurityConstants;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;

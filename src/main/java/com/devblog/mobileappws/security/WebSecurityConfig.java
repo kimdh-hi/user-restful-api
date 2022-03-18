@@ -1,5 +1,6 @@
 package com.devblog.mobileappws.security;
 
+import com.devblog.mobileappws.security.jwt.JwtAuthenticateFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
