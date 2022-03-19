@@ -3,6 +3,7 @@ package com.devblog.mobileappws.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
@@ -35,5 +36,11 @@ public class User {
         this.password = password;
         this.emailVerificationToken = emailVerificationToken;
         this.emailVerificationStatus = emailVerificationStatus;
+    }
+
+    public void update(User updateUser) {
+        if (!Objects.isNull(updateUser.getName())) this.name = updateUser.getName();
+        if (!Objects.isNull(updateUser.getEmail())) this.email = updateUser.getEmail();
+        if(!Objects.isNull(updateUser.getPassword())) this.password = updateUser.getPassword();
     }
 }

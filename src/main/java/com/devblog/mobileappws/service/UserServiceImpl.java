@@ -2,6 +2,7 @@ package com.devblog.mobileappws.service;
 
 import com.devblog.mobileappws.controller.dto.request.LoginRequest;
 import com.devblog.mobileappws.entity.User;
+import com.devblog.mobileappws.exception.entity.ErrorMessage;
 import com.devblog.mobileappws.exception.exceptions.ResourceAlreadyExistsException;
 import com.devblog.mobileappws.exception.exceptions.ResourceNotFoundException;
 import com.devblog.mobileappws.repository.UserRepository;
@@ -9,8 +10,11 @@ import com.devblog.mobileappws.security.jwt.JwtTokenProvider;
 import com.devblog.mobileappws.service.dto.UserDtoAssembler;
 import com.devblog.mobileappws.service.dto.request.UserRequestDto;
 import com.devblog.mobileappws.service.dto.response.JwtTokenResponse;
+import com.devblog.mobileappws.service.dto.response.PageUserResponseDto;
 import com.devblog.mobileappws.service.dto.response.UserResponseDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -27,6 +31,11 @@ public class UserServiceImpl implements UserService{
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
+
+    @Override
+    public Page<User> getUserList(Pageable pageable) {
+        return userRepository.findAll(pageable);
+    }
 
     @Transactional
     @Override
@@ -57,13 +66,36 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public UserResponseDto getUser(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(
-                () -> {
-                    throw new ResourceNotFoundException("존재하지 않는 사용자입니다. userId: " + userId);
-                }
-        );
+        User user = findUser(userId);
 
         return UserDtoAssembler.toUserResponseDto(user);
+    }
+
+    @Transactional
+    @Override
+    public UserResponseDto updateUser(Long userId, UserRequestDto userRequestDto) {
+        User user = findUser(userId);
+
+        User newUser = UserDtoAssembler.toUserEntity(userRequestDto);
+        newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
+        user.update(newUser);
+
+        return UserDtoAssembler.toUserResponseDto(user);
+    }
+
+    @Transactional
+    @Override
+    public void deleteUser(Long userId) {
+        findUser(userId);
+        userRepository.deleteById(userId);
+    }
+
+    private User findUser(Long userId) {
+        return userRepository.findById(userId).orElseThrow(
+                () -> {
+                    throw new ResourceNotFoundException(ErrorMessage.RESOURCE_NOT_FOUND.getMessage());
+                }
+        );
     }
 
     private void checkDuplicateEmail(String email) {
