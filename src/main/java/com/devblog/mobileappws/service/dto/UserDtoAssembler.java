@@ -1,7 +1,10 @@
 package com.devblog.mobileappws.service.dto;
 
+import com.devblog.mobileappws.entity.Address;
 import com.devblog.mobileappws.entity.User;
+import com.devblog.mobileappws.service.dto.request.AddressRequestDto;
 import com.devblog.mobileappws.service.dto.request.UserRequestDto;
+import com.devblog.mobileappws.service.dto.response.AddressResponseDto;
 import com.devblog.mobileappws.service.dto.response.PageUserResponseDto;
 import com.devblog.mobileappws.service.dto.response.UserResponseDto;
 import org.springframework.beans.BeanUtils;
@@ -19,6 +22,10 @@ public class UserDtoAssembler {
         );
     }
 
+    public static Address toAddressEntity(AddressRequestDto dto) {
+        return new Address(dto.getAddress(), dto.getDetailAddress());
+    }
+
     public static UserRequestDto toUserRequestDto(User user) {
         UserRequestDto userRequestDto = new UserRequestDto();
         BeanUtils.copyProperties(user, userRequestDto);
@@ -30,8 +37,8 @@ public class UserDtoAssembler {
                 user.getId(),
                 user.getName(),
                 user.getEmail(),
-                user.isEmailVerificationStatus()
-        );
+                user.isEmailVerificationStatus(),
+                new AddressResponseDto(user.getAddress().getAddress(), user.getAddress().getDetailAddress()));
 
         return userResponseDto;
     }

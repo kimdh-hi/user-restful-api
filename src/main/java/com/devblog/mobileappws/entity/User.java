@@ -30,12 +30,26 @@ public class User {
     @Column(nullable = false, columnDefinition = "boolean default false")
     private boolean emailVerificationStatus;
 
+    @Setter
+    @JoinColumn(name = "address_id")
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Address address;
+
     public User(String name, String email, String password, String emailVerificationToken, boolean emailVerificationStatus) {
         this.name = name;
         this.email = email;
         this.password = password;
         this.emailVerificationToken = emailVerificationToken;
         this.emailVerificationStatus = emailVerificationStatus;
+    }
+
+    public User(String name, String email, String password, String emailVerificationToken, boolean emailVerificationStatus, Address address) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.emailVerificationToken = emailVerificationToken;
+        this.emailVerificationStatus = emailVerificationStatus;
+        this.address = address;
     }
 
     public void update(User updateUser) {

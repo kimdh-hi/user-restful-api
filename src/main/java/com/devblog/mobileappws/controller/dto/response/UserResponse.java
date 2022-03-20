@@ -5,8 +5,8 @@ public class UserResponse {
     private Long id;
     private String name;
     private String email;
-    private String emailVerificationToken;
     private boolean emailVerificationStatus;
+
 
     public UserResponse(boolean emailVerificationStatus) {
         this.emailVerificationStatus = emailVerificationStatus;
@@ -43,14 +43,6 @@ public class UserResponse {
         this.email = email;
     }
 
-    public String getEmailVerificationToken() {
-        return emailVerificationToken;
-    }
-
-    public void setEmailVerificationToken(String emailVerificationToken) {
-        this.emailVerificationToken = emailVerificationToken;
-    }
-
     public boolean isEmailVerificationStatus() {
         return emailVerificationStatus;
     }
@@ -58,4 +50,5 @@ public class UserResponse {
     public void setEmailVerificationStatus(boolean emailVerificationStatus) {
         this.emailVerificationStatus = emailVerificationStatus;
     }
+
 }

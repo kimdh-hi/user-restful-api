@@ -15,13 +15,17 @@ public class UserRequest {
     @NotEmpty(message = "비밀번호는 필수입니다.")
     private String password;
 
+    private AddressRequest addressRequest;
+
+
     public UserRequest() {
     }
 
-    public UserRequest(String name, String email, String password) {
+    public UserRequest(String name, String email, String password, AddressRequest addressRequest) {
         this.name = name;
         this.email = email;
         this.password = password;
+        this.addressRequest = addressRequest;
     }
 
     public String getName() {
@@ -46,5 +50,13 @@ public class UserRequest {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public AddressRequest getAddressRequest() {
+        return addressRequest;
+    }
+
+    public void setAddressRequest(AddressRequest addressRequest) {
+        this.addressRequest = addressRequest;
     }
 }

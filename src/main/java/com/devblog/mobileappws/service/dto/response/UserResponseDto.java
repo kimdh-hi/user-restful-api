@@ -7,14 +7,17 @@ public class UserResponseDto {
     private String email;
     private boolean emailVerificationStatus;
 
+    private AddressResponseDto addressResponseDto;
+
     public UserResponseDto() {
     }
 
-    public UserResponseDto(Long userId, String name, String email, boolean emailVerificationStatus) {
+    public UserResponseDto(Long userId, String name, String email, boolean emailVerificationStatus, AddressResponseDto addressResponseDto) {
         this.userId = userId;
         this.name = name;
         this.email = email;
         this.emailVerificationStatus = emailVerificationStatus;
+        this.addressResponseDto = addressResponseDto;
     }
 
     public Long getUserId() {
@@ -47,5 +50,13 @@ public class UserResponseDto {
 
     public void setEmailVerificationStatus(boolean emailVerificationStatus) {
         this.emailVerificationStatus = emailVerificationStatus;
+    }
+
+    public AddressResponseDto getAddressResponseDto() {
+        return addressResponseDto;
+    }
+
+    public void setAddressResponseDto(AddressResponseDto addressResponseDto) {
+        this.addressResponseDto = addressResponseDto;
     }
 }

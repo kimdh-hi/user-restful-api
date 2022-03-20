@@ -8,20 +8,22 @@ public class UserRequestDto implements Serializable {
     private String name;
     private String email;
     private String password;
-    private String encryptedPassword;
     private String emailVerificationToken;
     private boolean emailVerificationStatus = false;
 
+    private AddressRequestDto addressRequestDto;
+
+
     public UserRequestDto() {}
 
-    public UserRequestDto(Long id, String name, String email, String password, String encryptedPassword, String emailVerificationToken, boolean emailVerificationStatus) {
+    public UserRequestDto(Long id, String name, String email, String password, String emailVerificationToken, boolean emailVerificationStatus, AddressRequestDto addressRequestDto) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
-        this.encryptedPassword = encryptedPassword;
         this.emailVerificationToken = emailVerificationToken;
         this.emailVerificationStatus = emailVerificationStatus;
+        this.addressRequestDto = addressRequestDto;
     }
 
     public Long getId() {
@@ -56,14 +58,6 @@ public class UserRequestDto implements Serializable {
         this.password = password;
     }
 
-    public String getEncryptedPassword() {
-        return encryptedPassword;
-    }
-
-    public void setEncryptedPassword(String encryptedPassword) {
-        this.encryptedPassword = encryptedPassword;
-    }
-
     public String getEmailVerificationToken() {
         return emailVerificationToken;
     }
@@ -78,5 +72,13 @@ public class UserRequestDto implements Serializable {
 
     public void setEmailVerificationStatus(boolean emailVerificationStatus) {
         this.emailVerificationStatus = emailVerificationStatus;
+    }
+
+    public AddressRequestDto getAddressRequestDto() {
+        return addressRequestDto;
+    }
+
+    public void setAddressRequestDto(AddressRequestDto addressRequestDto) {
+        this.addressRequestDto = addressRequestDto;
     }
 }

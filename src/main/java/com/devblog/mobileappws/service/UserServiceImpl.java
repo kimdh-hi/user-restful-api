@@ -1,6 +1,7 @@
 package com.devblog.mobileappws.service;
 
 import com.devblog.mobileappws.controller.dto.request.LoginRequest;
+import com.devblog.mobileappws.entity.Address;
 import com.devblog.mobileappws.entity.User;
 import com.devblog.mobileappws.exception.entity.ErrorMessage;
 import com.devblog.mobileappws.exception.exceptions.ResourceAlreadyExistsException;
@@ -42,8 +43,11 @@ public class UserServiceImpl implements UserService{
     public UserRequestDto createUser(UserRequestDto userRequestDto) {
         checkDuplicateEmail(userRequestDto.getEmail());
 
+        Address address = UserDtoAssembler.toAddressEntity(userRequestDto.getAddressRequestDto());
+
         User user = UserDtoAssembler.toUserEntity(userRequestDto);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setAddress(address);
 
         User savedUser = userRepository.save(user);
 
